@@ -33,6 +33,8 @@ def create_polygon(x, y, side_length, n_sides, flip=False):
             polygon_height = radius * np.sin(angle_at_corner)
             z=-z
             x = x+radius-polygon_height
+    # elif n_sides == 8:
+    #     z = radius * np.exp(np.pi * 0.125j)
     else:
         raise ValueError("n_sides not recognised")
 
@@ -84,12 +86,23 @@ def generate_tessellation(filename, n_sides, side_length):
 
     for row in range(num_rows):
         for col in range(num_cols):
-            x = (col * dx)
-            y = (row * dy)
+            if n_sides == 6:
+                x = ((col - 1/8) * dx)
+                y = ((row + 1/4) * dy)
+            elif n_sides == 8:
+                x = ((col - 2/6) * dx)
+                y = ((row - 2/6) * dy)
+            else:
+                x = ((col - 1/4) * dx)
+                y = ((row - 1/4) * dy)
 
             # Adjust hexagons to form a staggered grid
             if (n_sides == 3 or  n_sides == 6) and row % 2 == 1:
                 x += dx / 2
+
+            # if n_sides == 8:
+            #     x -= dx /4
+            #     y -= dy /4
 
             #Adjust pentagon
             flip = n_sides == 5 and col % 2 == 1
